@@ -4,3 +4,11 @@ help:
 
 build: ## Build binary
 	@go build
+
+test: unit integration ## Run unit and integration tests
+
+unit: ## Run unit tests
+	@go test ./...
+
+integration: build ## Run integration tests
+	@go test integration_test.go
