@@ -3,6 +3,7 @@
 package main
 
 import (
+	"io"
 	"net/http"
 	"os/exec"
 	"testing"
@@ -10,19 +11,44 @@ import (
 )
 
 func TestIntegration(t *testing.T) {
+	const unauthorizedResponse = `<?xml version="1.0" encoding="UTF-8"?>
+<Error>
+<Type>Authorization Required</Type>
+<Synopsis>REST method failed</Synopsis>
+<Message>Invalid username or password</Message>
+</Error>
+`
 	tests := []struct {
 		name     string
 		username string
 		password string
 		path     string
-		want     int
+		wantCode int
+		wantBody string
 	}{
 		{
-			"invalid url",
-			"johndoe",
-			"secret",
+			"unknown path",
+			"",
+			"",
 			"/missing",
 			404,
+			"404 page not found\n",
+		},
+		{
+			"wrong username",
+			"wronguser",
+			"secret",
+			"/rest/GetUserlogin",
+			401,
+			unauthorizedResponse,
+		},
+		{
+			"wrong password",
+			"johndoe",
+			"wrongpassword",
+			"/rest/GetUserlogin",
+			401,
+			unauthorizedResponse,
 		},
 	}
 	cmd := exec.Command("./ovpnd")
@@ -43,8 +69,12 @@ func TestIntegration(t *testing.T) {
 			if err != nil {
 				t.Fatalf("request failed: %v", err)
 			}
-			if response.StatusCode != tt.want {
-				t.Fatalf("response = %d, want: %d", response.StatusCode, tt.want)
+			defer response.Body.Close()
+			if got := response.StatusCode; got != tt.wantCode {
+				t.Fatalf("Status Code = %d, want: %d", got, tt.wantCode)
+			}
+			if got, _ := io.ReadAll(response.Body); string(got) != tt.wantBody {
+				t.Fatalf("Body:\ngot:  %q\nwant: %q", got, tt.wantBody)
 			}
 		})
 	}
