@@ -62,12 +62,12 @@ func TestIntegration(t *testing.T) {
 			client := &http.Client{}
 			req, err := http.NewRequest("GET", "http://127.0.0.1:8080"+tt.path, nil)
 			if err != nil {
-				t.Fatalf("failed to build reqquest: %v", err)
+				t.Fatalf("Failed to build request: %v", err)
 			}
 			req.SetBasicAuth(tt.username, tt.password)
 			response, err := client.Do(req)
 			if err != nil {
-				t.Fatalf("request failed: %v", err)
+				t.Fatalf("Request failed: %v", err)
 			}
 			defer response.Body.Close()
 			if got := response.StatusCode; got != tt.wantCode {
