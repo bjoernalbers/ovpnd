@@ -11,49 +11,11 @@ import (
 	"strings"
 )
 
-const bodyUnauthorized = `<?xml version="1.0" encoding="UTF-8"?>
-<Error>
-<Type>Authorization Required</Type>
-<Synopsis>REST method failed</Synopsis>
-<Message>Invalid username or password</Message>
-</Error>`
-
-const bodyError = `<?xml version="1.0" encoding="UTF-8"?>
-<Error>
-<Type>Server Error</Type>
-<Synopsis>REST method failed</Synopsis>
-<Message>Failed to load profile</Message>
-</Error>`
-
 type Profile struct {
 	Path, Password string
 }
 
 type database map[string]Profile
-
-func (db database) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	username, password, ok := r.BasicAuth()
-	if !ok {
-		http.Error(w, bodyUnauthorized, http.StatusUnauthorized)
-		return
-	}
-	profile, ok := db[username]
-	if !ok {
-		http.Error(w, bodyUnauthorized, http.StatusUnauthorized)
-		return
-	}
-	if profile.Password != password {
-		http.Error(w, bodyUnauthorized, http.StatusUnauthorized)
-		return
-	}
-	file, err := os.Open(profile.Path)
-	if err != nil {
-		http.Error(w, bodyError, 500)
-		return
-	}
-	defer file.Close()
-	io.Copy(w, file)
-}
 
 func buildDatabase(dir string) (database, error) {
 	db := database{}
@@ -89,7 +51,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	http.Handle("/rest/GetUserlogin", db)
-	http.Handle("/rest/GetAutologin", db)
+	handler := Handler{db}
+	http.Handle("/rest/GetUserlogin", handler)
+	http.Handle("/rest/GetAutologin", handler)
 	log.Fatal(http.ListenAndServe(*addr, nil))
 }
