@@ -7,6 +7,11 @@ import (
 	"net/http"
 )
 
+func init() {
+	log.SetFlags(0)
+	log.SetPrefix("ovpnd: ")
+}
+
 func main() {
 	addr := flag.String("addr", "127.0.0.1:8080", "Address to listen on")
 	flag.Parse()
