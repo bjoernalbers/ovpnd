@@ -18,6 +18,13 @@ func TestIntegration(t *testing.T) {
 <Message>Invalid username or password</Message>
 </Error>
 `
+	const errorResponse = `<?xml version="1.0" encoding="UTF-8"?>
+<Error>
+<Type>Server Error</Type>
+<Synopsis>REST method failed</Synopsis>
+<Message>Failed to load profile</Message>
+</Error>
+`
 	tests := []struct {
 		name     string
 		username string
@@ -65,6 +72,14 @@ func TestIntegration(t *testing.T) {
 			"/rest/GetAutologin",
 			200,
 			"content of profile\n",
+		},
+		{
+			"unreadable profile",
+			"unreadable",
+			"secret",
+			"/rest/GetUserlogin",
+			500,
+			errorResponse,
 		},
 	}
 	cmd := exec.Command("./ovpnd", "-dir", "testdata")

@@ -18,6 +18,13 @@ const bodyUnauthorized = `<?xml version="1.0" encoding="UTF-8"?>
 <Message>Invalid username or password</Message>
 </Error>`
 
+const bodyError = `<?xml version="1.0" encoding="UTF-8"?>
+<Error>
+<Type>Server Error</Type>
+<Synopsis>REST method failed</Synopsis>
+<Message>Failed to load profile</Message>
+</Error>`
+
 type Profile struct {
 	Path, Password string
 }
@@ -39,8 +46,11 @@ func (db database) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, bodyUnauthorized, http.StatusUnauthorized)
 		return
 	}
-	file, _ := os.Open(profile.Path)
-	// TODO: Handle error!
+	file, err := os.Open(profile.Path)
+	if err != nil {
+		http.Error(w, bodyError, 500)
+		return
+	}
 	defer file.Close()
 	io.Copy(w, file)
 }
