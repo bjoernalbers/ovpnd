@@ -24,7 +24,7 @@ You need the following:
 
 Build or download the binary and run it on your server:
 
-    ./ovpnd --cert yourcert.pem --key yourkey.pem --dir openvpn-profiles/
+    ./ovpnd --cert yourcert.pem --key yourkey.pem openvpn-profiles/
 
 This will start the webservice on port `443/tcp`.
 Then point your users to the server URL.

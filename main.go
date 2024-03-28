@@ -8,13 +8,13 @@ import (
 )
 
 func main() {
-	dir := flag.String("dir", "", "Directory with configuration profiles (.ovpn) and password files (.txt)")
 	addr := flag.String("addr", "127.0.0.1:8080", "Address to listen on")
 	flag.Parse()
-	if *dir == "" {
-		log.Fatal("dir not set")
+	args := flag.Args()
+	if len(args) != 1 {
+		log.Fatal("Please give directory with connection profiles (.ovpn) and password files (*.txt) as argument!")
 	}
-	db, err := buildDatabase(*dir)
+	db, err := buildDatabase(args[0])
 	if err != nil {
 		log.Fatal(err)
 	}
