@@ -80,5 +80,6 @@ func main() {
 		log.Fatal(err)
 	}
 	http.Handle("/rest/GetUserlogin", db)
+	http.Handle("/rest/GetAutologin", db)
 	log.Fatal(http.ListenAndServe(*addr, nil))
 }

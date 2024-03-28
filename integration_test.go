@@ -58,6 +58,14 @@ func TestIntegration(t *testing.T) {
 			200,
 			"content of profile\n",
 		},
+		{
+			"valid username and password with autologin path",
+			"johndoe",
+			"secret",
+			"/rest/GetAutologin",
+			200,
+			"content of profile\n",
+		},
 	}
 	cmd := exec.Command("./ovpnd", "-dir", "testdata")
 	if err := cmd.Start(); err != nil {
