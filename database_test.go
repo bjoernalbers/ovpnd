@@ -13,6 +13,6 @@ func TestBuildDatabase(t *testing.T) {
 		t.Fatalf("buildDatabase does not include expected profile: %#v", db)
 	}
 	if got != want {
-		t.Fatalf("database:\ngot:  %#v\nwant: %#v\n", got, want)
+		t.Fatalf("Database:\ngot:  %#v\nwant: %#v\n", got, want)
 	}
 }

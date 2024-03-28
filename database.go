@@ -11,10 +11,10 @@ type Profile struct {
 	Path, Password string
 }
 
-type database map[string]Profile
+type Database map[string]Profile
 
-func buildDatabase(dir string) (database, error) {
-	db := database{}
+func buildDatabase(dir string) (Database, error) {
+	db := Database{}
 	entries, err := os.ReadDir(dir)
 	if err != nil {
 		return db, err

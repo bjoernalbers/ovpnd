@@ -8,7 +8,7 @@ import (
 )
 
 type Handler struct {
-	db database
+	db Database
 }
 
 func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
