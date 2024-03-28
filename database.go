@@ -11,6 +11,11 @@ type Profile struct {
 	Path, Password string
 }
 
+const (
+	profileSuffix  = ".ovpn"
+	passwordSuffix = ".txt"
+)
+
 type Database map[string]Profile
 
 func buildDatabase(dir string) (Database, error) {
@@ -21,11 +26,11 @@ func buildDatabase(dir string) (Database, error) {
 	}
 	for _, entry := range entries {
 		suffix := filepath.Ext(entry.Name())
-		if suffix != ".ovpn" || entry.IsDir() {
+		if suffix != profileSuffix || entry.IsDir() {
 			continue
 		}
 		name := strings.TrimSuffix(entry.Name(), suffix)
-		passwordFile, err := os.Open(filepath.Join(dir, name+".txt"))
+		passwordFile, err := os.Open(filepath.Join(dir, name+passwordSuffix))
 		if err != nil {
 			continue
 		}
