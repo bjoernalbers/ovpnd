@@ -1,24 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 	"os"
-)
-
-const (
-	bodyUnauthorized = `<?xml version="1.0" encoding="UTF-8"?>
-<Error>
-<Type>Authorization Required</Type>
-<Synopsis>REST method failed</Synopsis>
-<Message>Invalid username or password</Message>
-</Error>`
-	bodyError = `<?xml version="1.0" encoding="UTF-8"?>
-<Error>
-<Type>Server Error</Type>
-<Synopsis>REST method failed</Synopsis>
-<Message>Failed to load profile</Message>
-</Error>`
 )
 
 type Handler struct {
@@ -28,23 +14,47 @@ type Handler struct {
 func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	username, password, ok := r.BasicAuth()
 	if !ok {
-		http.Error(w, bodyUnauthorized, http.StatusUnauthorized)
+		h.SendUnauthorized(w)
 		return
 	}
 	profile, ok := h.db[username]
 	if !ok {
-		http.Error(w, bodyUnauthorized, http.StatusUnauthorized)
+		h.SendUnauthorized(w)
 		return
 	}
 	if profile.Password != password {
-		http.Error(w, bodyUnauthorized, http.StatusUnauthorized)
+		h.SendUnauthorized(w)
 		return
 	}
 	file, err := os.Open(profile.Path)
 	if err != nil {
-		http.Error(w, bodyError, 500)
+		h.SendServerError(w)
 		return
 	}
 	defer file.Close()
 	io.Copy(w, file)
+}
+
+func (h Handler) SendUnauthorized(w http.ResponseWriter) {
+	body := XmlError{Type: "Authorization Required", Message: "Invalid username or password"}
+	http.Error(w, body.String(), http.StatusUnauthorized)
+}
+
+func (h Handler) SendServerError(w http.ResponseWriter) {
+	body := XmlError{Type: "Internal Server Error", Message: "Failed to load profile"}
+	http.Error(w, body.String(), http.StatusInternalServerError)
+}
+
+type XmlError struct {
+	Type, Message string
+}
+
+func (x XmlError) String() string {
+	const str = `<?xml version="1.0" encoding="UTF-8"?>
+<Error>
+<Type>%s</Type>
+<Synopsis>REST method failed</Synopsis>
+<Message>%s</Message>
+</Error>`
+	return fmt.Sprintf(str, x.Type, x.Message)
 }

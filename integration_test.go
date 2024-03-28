@@ -11,20 +11,22 @@ import (
 )
 
 func TestIntegration(t *testing.T) {
-	const unauthorizedResponse = `<?xml version="1.0" encoding="UTF-8"?>
+	const (
+		unauthorizedResponse = `<?xml version="1.0" encoding="UTF-8"?>
 <Error>
 <Type>Authorization Required</Type>
 <Synopsis>REST method failed</Synopsis>
 <Message>Invalid username or password</Message>
 </Error>
 `
-	const errorResponse = `<?xml version="1.0" encoding="UTF-8"?>
+		errorResponse = `<?xml version="1.0" encoding="UTF-8"?>
 <Error>
-<Type>Server Error</Type>
+<Type>Internal Server Error</Type>
 <Synopsis>REST method failed</Synopsis>
 <Message>Failed to load profile</Message>
 </Error>
 `
+	)
 	tests := []struct {
 		name     string
 		username string
