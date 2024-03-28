@@ -21,7 +21,7 @@ func buildDatabase(dir string) (Database, error) {
 	}
 	for _, entry := range entries {
 		suffix := filepath.Ext(entry.Name())
-		if suffix != ".ovpn" {
+		if suffix != ".ovpn" || entry.IsDir() {
 			continue
 		}
 		name := strings.TrimSuffix(entry.Name(), suffix)
