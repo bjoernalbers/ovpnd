@@ -50,6 +50,14 @@ func TestIntegration(t *testing.T) {
 			401,
 			unauthorizedResponse,
 		},
+		{
+			"right username and password",
+			"johndoe",
+			"secret",
+			"/rest/GetUserlogin",
+			200,
+			"content of profile\n",
+		},
 	}
 	cmd := exec.Command("./ovpnd")
 	if err := cmd.Start(); err != nil {
