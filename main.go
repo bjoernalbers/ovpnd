@@ -19,17 +19,15 @@ type Profile struct {
 	Password, Content string
 }
 
-type ProfileHandler struct {
-	db map[string]Profile
-}
+type database map[string]Profile
 
-func (p ProfileHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (db database) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	username, password, ok := r.BasicAuth()
 	if !ok {
 		http.Error(w, bodyUnauthorized, http.StatusUnauthorized)
 		return
 	}
-	profile, ok := p.db[username]
+	profile, ok := db[username]
 	if !ok {
 		http.Error(w, bodyUnauthorized, http.StatusUnauthorized)
 		return
@@ -44,7 +42,7 @@ func (p ProfileHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func main() {
 	addr := flag.String("addr", "127.0.0.1:8080", "Address to listen on")
 	flag.Parse()
-	handler := ProfileHandler{map[string]Profile{"johndoe": Profile{"secret", "content of profile\n"}}}
-	http.Handle("/rest/GetUserlogin", handler)
+	db := database{"johndoe": Profile{"secret", "content of profile\n"}}
+	http.Handle("/rest/GetUserlogin", db)
 	log.Fatal(http.ListenAndServe(*addr, nil))
 }
