@@ -3,7 +3,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -40,7 +39,10 @@ func (db database) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, bodyUnauthorized, http.StatusUnauthorized)
 		return
 	}
-	fmt.Fprintf(w, "content of profile\n")
+	file, _ := os.Open(profile.Path)
+	// TODO: Handle error!
+	defer file.Close()
+	io.Copy(w, file)
 }
 
 func buildDatabase(dir string) (database, error) {
@@ -67,9 +69,13 @@ func buildDatabase(dir string) (database, error) {
 }
 
 func main() {
+	dir := flag.String("dir", "", "Directory with configuration profiles (.ovpn) and password files (.txt)")
 	addr := flag.String("addr", "127.0.0.1:8080", "Address to listen on")
 	flag.Parse()
-	db, err := buildDatabase("testdata")
+	if *dir == "" {
+		log.Fatal("dir not set")
+	}
+	db, err := buildDatabase(*dir)
 	if err != nil {
 		log.Fatal(err)
 	}

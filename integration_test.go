@@ -59,7 +59,7 @@ func TestIntegration(t *testing.T) {
 			"content of profile\n",
 		},
 	}
-	cmd := exec.Command("./ovpnd")
+	cmd := exec.Command("./ovpnd", "-dir", "testdata")
 	if err := cmd.Start(); err != nil {
 		t.Fatalf("%s failed: %v", cmd, err)
 	}
