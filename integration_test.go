@@ -35,7 +35,7 @@ func TestIntegration(t *testing.T) {
 			"404 page not found\n",
 		},
 		{
-			"wrong username",
+			"invalid username",
 			"wronguser",
 			"secret",
 			"/rest/GetUserlogin",
@@ -43,7 +43,7 @@ func TestIntegration(t *testing.T) {
 			unauthorizedResponse,
 		},
 		{
-			"wrong password",
+			"invalid password",
 			"johndoe",
 			"wrongpassword",
 			"/rest/GetUserlogin",
@@ -51,7 +51,7 @@ func TestIntegration(t *testing.T) {
 			unauthorizedResponse,
 		},
 		{
-			"right username and password",
+			"valid username and password",
 			"johndoe",
 			"secret",
 			"/rest/GetUserlogin",
