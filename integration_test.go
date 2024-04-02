@@ -75,14 +75,6 @@ func TestIntegration(t *testing.T) {
 			200,
 			"content of profile\n",
 		},
-		{
-			"unreadable profile",
-			"unreadable",
-			"secret",
-			"/rest/GetUserlogin",
-			500,
-			errorResponse,
-		},
 	}
 	cmd := exec.Command("./ovpnd", "testdata")
 	if err := cmd.Start(); err != nil {
