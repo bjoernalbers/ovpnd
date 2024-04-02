@@ -5,6 +5,8 @@ import (
 	"flag"
 	"log"
 	"net/http"
+
+	"github.com/bjoernalbers/ovpnd/profiles"
 )
 
 func init() {
@@ -19,11 +21,11 @@ func main() {
 	if len(args) != 1 {
 		log.Fatal("Please give directory with connection profiles (.ovpn) and password files (*.txt) as argument!")
 	}
-	db, err := buildDatabase(args[0])
+	p, err := profiles.ReadDir(args[0])
 	if err != nil {
 		log.Fatal(err)
 	}
-	handler := Handler{db}
+	handler := Handler{p}
 	http.Handle("/rest/GetUserlogin", handler)
 	http.Handle("/rest/GetAutologin", handler)
 	log.Fatal(http.ListenAndServe(*addr, nil))

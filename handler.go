@@ -4,11 +4,14 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"os"
 )
 
+type Opener interface {
+	Open(username, password string) (io.ReadCloser, error)
+}
+
 type Handler struct {
-	db Database
+	profiles Opener
 }
 
 func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -17,22 +20,13 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		h.SendUnauthorized(w)
 		return
 	}
-	profile, ok := h.db[username]
-	if !ok {
-		h.SendUnauthorized(w)
-		return
-	}
-	if profile.Password != password {
-		h.SendUnauthorized(w)
-		return
-	}
-	file, err := os.Open(profile.Path)
+	reader, err := h.profiles.Open(username, password)
 	if err != nil {
-		h.SendServerError(w)
+		h.SendUnauthorized(w)
 		return
 	}
-	defer file.Close()
-	io.Copy(w, file)
+	defer reader.Close()
+	io.Copy(w, reader)
 }
 
 func (h Handler) SendUnauthorized(w http.ResponseWriter) {
