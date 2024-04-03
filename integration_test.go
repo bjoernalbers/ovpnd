@@ -76,7 +76,7 @@ func TestIntegration(t *testing.T) {
 			"content of profile\n",
 		},
 	}
-	cmd := exec.Command("./ovpnd", "testdata")
+	cmd := exec.Command("./ovpnd", "-no-tls", "-addr", "127.0.0.1:8080", "testdata")
 	if err := cmd.Start(); err != nil {
 		t.Fatalf("%s failed: %v", cmd, err)
 	}
