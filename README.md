@@ -1,14 +1,10 @@
 # ovpnd - Simple .ovpn Files Webserver for OpenVPN Connect
 
-## Motivation
-
-[OpenVPN Connect](https://openvpn.net/client/) has the ability to import
-connection profiles (.ovpn files) from an 
-[OpenVPN Access Server](https://openvpn.net/access-server/) by HTTPS.
-Unfortunately the free OpenVPN server does not have this feature.
-But this project provides such a
-[webservice](https://openvpn.net/images/pdf/REST_API.pdf), so that your users
-can download their connection profiles by themself.
+The official OpenVPN client [OpenVPN Connect](https://openvpn.net/client/) also
+can fetch client configuration files (.ovpn files) by HTTPS, usually from an
+[OpenVPN Access Server](https://openvpn.net/access-server/).
+`ovpnd` serves those .ovpn files files as well by implementing the official
+[REST API](https://openvpn.net/images/pdf/REST_API.pdf).
 
 ## Requirements
 
