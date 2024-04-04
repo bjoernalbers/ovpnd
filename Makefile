@@ -1,4 +1,5 @@
 VERSION := $(shell git describe --tags | grep -Eo '^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$$' | tr -d v)
+IMAGE := bjoernalbers/ovpnd
 
 # Absolutely awesome: http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 help:
@@ -14,3 +15,7 @@ unit: ## Run unit tests
 
 integration: build ## Run integration tests
 	@go test integration_test.go
+
+docker: ## Build and publish docker image
+	docker build --platform=linux/amd64 -t '$(IMAGE):latest' -t '$(IMAGE):$(VERSION)' .
+	docker push '$(IMAGE)' --all-tags
