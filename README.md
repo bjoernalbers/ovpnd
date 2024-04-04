@@ -1,4 +1,4 @@
-# ovpnd - Distribute .ovpn files to OpenVPN Connect clients by HTTPS
+# ovpnd - Simple .ovpn Files Webserver for OpenVPN Connect
 
 ## Motivation
 
