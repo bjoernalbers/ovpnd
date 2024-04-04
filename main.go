@@ -6,9 +6,13 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/bjoernalbers/ovpnd/profiles"
 )
+
+// Version gets set via build flags
+var Version = "unset"
 
 const (
 	DefaultAddr    = ":80"
@@ -25,8 +29,13 @@ func main() {
 	noTLS := flag.Bool("no-tls", false, "Disable TLS if behing TLS proxy")
 	cert := flag.String("cert", "", "TLS certificate file (required unless running with -no-tls)")
 	key := flag.String("key", "", "TLS key file (required unless running with -no-tls)")
+	displayVersion := flag.Bool("version", false, "Display version and exit")
 	flag.Parse()
 	args := flag.Args()
+	if *displayVersion {
+		fmt.Printf("%s\n", Version)
+		os.Exit(0)
+	}
 	if len(args) != 1 {
 		log.Fatal("Please give directory with connection profiles (.ovpn) and password files (*.txt) as argument!")
 	}

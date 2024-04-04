@@ -6,9 +6,22 @@ import (
 	"io"
 	"net/http"
 	"os/exec"
+	"regexp"
 	"testing"
 	"time"
 )
+
+func TestVersion(t *testing.T) {
+	cmd := exec.Command("./ovpnd", "-version")
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("%q failed:\n%s", cmd, output)
+	}
+	semVer := regexp.MustCompile(`(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?`)
+	if !semVer.Match(output) {
+		t.Fatalf("%q returned no semantic version:\n%s", cmd, output)
+	}
+}
 
 func TestIntegration(t *testing.T) {
 	const (
