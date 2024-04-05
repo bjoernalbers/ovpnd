@@ -16,6 +16,8 @@ unit: ## Run unit tests
 integration: build ## Run integration tests
 	@go test integration_test.go
 
-docker: ## Build and publish docker image
+image: ## Build docker image
 	docker build --platform=linux/amd64 -t '$(IMAGE):latest' -t '$(IMAGE):$(VERSION)' .
+
+publish: ## Publish docker image
 	docker push '$(IMAGE)' --all-tags
