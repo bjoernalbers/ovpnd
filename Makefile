@@ -20,4 +20,5 @@ image: ## Build docker image
 	docker build --platform=linux/amd64 -t '$(IMAGE):latest' -t '$(IMAGE):$(VERSION)' .
 
 publish: ## Publish docker image
-	docker push '$(IMAGE)' --all-tags
+	docker push '$(IMAGE):latest'
+	docker push '$(IMAGE):$(VERSION)'
