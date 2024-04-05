@@ -37,7 +37,7 @@ Running `ovpnd`:
 
 Testing:
 
-    $ curl https://openvpn.radiologie-lippstadt.de/rest/GetUserlogin
+    $ curl https://openvpn.example.com/rest/GetUserlogin
     <?xml version="1.0" encoding="UTF-8"?>
     <Error>
     <Type>Authorization Required</Type>
