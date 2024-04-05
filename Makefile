@@ -19,6 +19,8 @@ integration: build ## Run integration tests
 image: ## Build docker image
 	docker build --platform=linux/amd64 -t '$(IMAGE):latest' -t '$(IMAGE):$(VERSION)' .
 
-publish: ## Publish docker image
+release: ## Push changes to GitHub and Docker Hub
+	git push origin
+	git push origin "v$(VERSION)"
 	docker push '$(IMAGE):latest'
 	docker push '$(IMAGE):$(VERSION)'
