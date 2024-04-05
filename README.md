@@ -51,3 +51,6 @@ Testing:
 Running `ovpnd` without TLS if a reverse-proxy already takes care of TLS:
 
     $ docker run --rm -p 80:80 -v $(pwd)/profiles:/profiles bjoernalbers/ovpnd -no-tls /profiles
+
+**If you add / remove .ovpn files or change passwords you have to restart the
+container so that `ovpnd` picks up the changes!**
