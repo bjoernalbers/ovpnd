@@ -18,12 +18,36 @@ You need the following:
 
 ## Usage
 
-Build or download the binary and run it on your server:
+`ovpnd` is distributed as
+[docker image](https://hub.docker.com/r/bjoernalbers/ovpnd) for easy deployment.
 
-    ./ovpnd -cert yourcert.crt -key yourkey.key openvpn-profiles/
+Getting help:
 
-This will start the webservice on port `443/tcp`.
-Then point your users to the server URL.
+    $ docker run --rm bjoernalbers/ovpnd -h
 
-For authentication the username is the basename of the .ovpn file (without the
-suffix) and the password is the content of the corresponding .txt file.
+Running `ovpnd`:
+
+    $ ls tls
+    cert.crt        cert.key
+    $ ls profiles
+    johndoe.ovpn    johndoe.txt
+    $ cat profiles/johndoe.txt
+    secret
+    $ docker run --rm -p 443:443 -v $(pwd)/tls:/tls -v $(pwd)/profiles:/profiles bjoernalbers/ovpnd -cert /tls/cert.crt -key /tls/cert.key /profiles
+
+Testing:
+
+    $ curl https://openvpn.radiologie-lippstadt.de/rest/GetUserlogin
+    <?xml version="1.0" encoding="UTF-8"?>
+    <Error>
+    <Type>Authorization Required</Type>
+    <Synopsis>REST method failed</Synopsis>
+    <Message>Invalid username or password</Message>
+    </Error>
+
+    $ curl -u johndoe:secret https://openvpn.example.com/rest/GetUserlogin
+    content of profile
+
+Running `ovpnd` without TLS if a reverse-proxy already takes care of TLS:
+
+    $ docker run --rm -p 80:80  -v $(pwd)/profiles:/profiles bjoernalbers/ovpnd -no-tls /profiles
