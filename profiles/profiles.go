@@ -40,9 +40,15 @@ func ReadDir(dir string) (Profiles, error) {
 			continue
 		}
 		defer passwordFile.Close()
-		password, err := io.ReadAll(passwordFile)
-		passwordStr := strings.TrimSuffix(string(password), "\n")
-		profiles[index{name, passwordStr}] = filepath.Join(dir, entry.Name())
+		content, err := io.ReadAll(passwordFile)
+		if err != nil {
+			continue
+		}
+		password := strings.TrimSuffix(string(content), "\n")
+		if password == "" {
+			continue
+		}
+		profiles[index{name, password}] = filepath.Join(dir, entry.Name())
 	}
 	return profiles, nil
 }

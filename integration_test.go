@@ -88,6 +88,14 @@ func TestIntegration(t *testing.T) {
 			200,
 			"content of profile\n",
 		},
+		{
+			"empty password",
+			"nopassword",
+			"",
+			"/rest/GetUserlogin",
+			401,
+			unauthorizedResponse,
+		},
 	}
 	cmd := exec.Command("./ovpnd", "-no-tls", "-addr", "127.0.0.1:8080", "testdata")
 	if err := cmd.Start(); err != nil {
