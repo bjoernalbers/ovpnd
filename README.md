@@ -3,6 +3,9 @@
 The official OpenVPN client [OpenVPN Connect](https://openvpn.net/client/) also
 can fetch client configuration files (.ovpn files) by HTTPS, usually from an
 [OpenVPN Access Server](https://openvpn.net/access-server/).
+
+![Import profile via URL](connect.png "OpenVPN Connect")
+
 `ovpnd` serves those .ovpn files files as well by implementing the official
 [REST API](https://openvpn.net/images/pdf/REST_API.pdf).
 
