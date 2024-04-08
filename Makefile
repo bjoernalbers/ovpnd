@@ -6,13 +6,13 @@ IMAGE := bjoernalbers/ovpnd
 all: unit integration ## Build binary and run all tests
 
 build: ## Build binary
-	@go build -ldflags '-X main.Version=$(VERSION)'
+	go build -ldflags '-X main.Version=$(VERSION)'
 
 unit: ## Run unit tests
-	@go test ./...
+	go test ./...
 
 integration: build ## Run integration tests
-	@go test integration_test.go
+	go test integration_test.go
 
 image: ## Build docker image
 	docker build --platform=linux/amd64 -t '$(IMAGE):latest' -t '$(IMAGE):$(VERSION)' .
