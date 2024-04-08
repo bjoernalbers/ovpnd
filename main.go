@@ -19,11 +19,6 @@ const (
 	DefaultTLSAddr = ":443"
 )
 
-func init() {
-	log.SetFlags(0)
-	log.SetPrefix("ovpnd: ")
-}
-
 func main() {
 	addr := flag.String("addr", "", fmt.Sprintf("Address to listen on (default %s or %s with -no-tls)", DefaultTLSAddr, DefaultAddr))
 	noTLS := flag.Bool("no-tls", false, "Disable TLS if behing TLS proxy")
