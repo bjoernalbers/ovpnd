@@ -31,6 +31,7 @@ func main() {
 		fmt.Printf("%s\n", Version)
 		os.Exit(0)
 	}
+	log.Printf("Starting ovpnd, version %s\n", Version)
 	if len(args) != 1 {
 		log.Fatal("Please give directory with connection profiles (.ovpn) and password files (*.txt) as argument!")
 	}
