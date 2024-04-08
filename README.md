@@ -3,11 +3,10 @@
 The official OpenVPN client [OpenVPN Connect](https://openvpn.net/client/) also
 can fetch client configuration files (.ovpn files) by HTTPS, usually from an
 [OpenVPN Access Server](https://openvpn.net/access-server/).
-
-![Import profile via URL](connect.png "OpenVPN Connect")
-
 `ovpnd` serves those .ovpn files files as well by implementing the official
 [REST API](https://openvpn.net/images/pdf/REST_API.pdf).
+
+![Import profile via URL](connect.png "OpenVPN Connect")
 
 ## Requirements
 
@@ -36,7 +35,8 @@ Running `ovpnd`:
     johndoe.ovpn    johndoe.txt
     $ cat profiles/johndoe.txt
     secret
-    $ docker run --rm -p 443:443 -v $(pwd)/tls:/tls -v $(pwd)/profiles:/profiles bjoernalbers/ovpnd -cert /tls/cert.crt -key /tls/cert.key /profiles
+    $ docker run --rm -p 443:443 -v $(pwd)/tls:/tls -v $(pwd)/profiles:/profiles \
+        bjoernalbers/ovpnd -cert /tls/cert.crt -key /tls/cert.key /profiles
 
 Testing:
 
@@ -53,7 +53,8 @@ Testing:
 
 Running `ovpnd` without TLS if a reverse-proxy already takes care of TLS:
 
-    $ docker run --rm -p 80:80 -v $(pwd)/profiles:/profiles bjoernalbers/ovpnd -no-tls /profiles
+    $ docker run --rm -p 80:80 -v $(pwd)/profiles:/profiles \
+        bjoernalbers/ovpnd -no-tls /profiles
 
 **If you add / remove .ovpn files or change passwords you have to restart the
 container so that `ovpnd` picks up the changes!**
