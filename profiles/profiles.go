@@ -50,6 +50,9 @@ func ReadDir(dir string) (Profiles, error) {
 		}
 		profiles[index{name, password}] = filepath.Join(dir, entry.Name())
 	}
+	if len(profiles) == 0 {
+		return profiles, fmt.Errorf("%s contains no profiles with passwords", dir)
+	}
 	return profiles, nil
 }
 

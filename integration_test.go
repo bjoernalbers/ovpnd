@@ -5,6 +5,7 @@ package main
 import (
 	"io"
 	"net/http"
+	"os"
 	"os/exec"
 	"regexp"
 	"testing"
@@ -20,6 +21,18 @@ func TestVersion(t *testing.T) {
 	semVer := regexp.MustCompile(`(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?`)
 	if !semVer.Match(output) {
 		t.Fatalf("%q returned no semantic version:\n%s", cmd, output)
+	}
+}
+
+func TestEmptyDir(t *testing.T) {
+	dir, err := os.MkdirTemp("", "ovpnd-test-*")
+	if err != nil {
+		t.Fatalf("could not create test dir: %v", err)
+	}
+	cmd := exec.Command("./ovpnd", "-no-tls", dir)
+	err = cmd.Run()
+	if err == nil {
+		t.Fatalf("%q should have returned an error", cmd)
 	}
 }
 
