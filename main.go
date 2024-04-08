@@ -46,7 +46,7 @@ func main() {
 			*addr = DefaultTLSAddr
 		}
 	}
-	handler := Handler{p}
+	handler := LogHandler{Handler{p}}
 	http.Handle("/rest/GetUserlogin", handler)
 	http.Handle("/rest/GetAutologin", handler)
 	if *noTLS {

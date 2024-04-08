@@ -3,7 +3,9 @@ package main
 import (
 	"fmt"
 	"io"
+	"log"
 	"net/http"
+	"time"
 )
 
 type Opener interface {
@@ -51,4 +53,27 @@ func (x XmlError) String() string {
 <Message>%s</Message>
 </Error>`
 	return fmt.Sprintf(str, x.Type, x.Message)
+}
+
+type LogHandler struct {
+	next http.Handler
+}
+
+type StatusRecorder struct {
+	http.ResponseWriter
+	Status int
+}
+
+func (s *StatusRecorder) WriteHeader(status int) {
+	s.Status = status
+	s.ResponseWriter.WriteHeader(status)
+}
+
+func (l LogHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	start := time.Now()
+	recorder := &StatusRecorder{w, http.StatusOK}
+	l.next.ServeHTTP(recorder, r)
+	username, _, _ := r.BasicAuth()
+	duration := time.Since(start)
+	log.Printf("%s %s (%s) %d %s\n", r.Method, r.URL, username, recorder.Status, duration)
 }
