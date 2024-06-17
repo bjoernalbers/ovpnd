@@ -32,6 +32,7 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h Handler) SendUnauthorized(w http.ResponseWriter) {
+	w.Header().Set("WWW-Authenticate", `Basic realm="restricted", charset="UTF-8"`)
 	body := XmlError{Type: "Authorization Required", Message: "Invalid username or password"}
 	http.Error(w, body.String(), http.StatusUnauthorized)
 }
